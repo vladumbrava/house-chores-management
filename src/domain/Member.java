@@ -22,6 +22,13 @@ public class Member implements Identifiable<UUID>, Serializable {
         this.memberPoints = 0;
     }
 
+    public Member(String memberFirstName, String memberLastName, int memberAge, int memberPoints) {
+        this.memberFirstName = memberFirstName;
+        this.memberLastName = memberLastName;
+        this.memberAge = memberAge;
+        this.memberPoints = memberPoints;
+    }
+
     public String getMemberFirstName() {
         return memberFirstName;
     }
