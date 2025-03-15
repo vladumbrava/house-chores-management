@@ -12,9 +12,10 @@ public class DBChoreRepository extends MemoryRepository<UUID, Chore>{
 
     public DBChoreRepository(String repoPath) {
         this.URL = "jdbc:sqlite:" + repoPath;
+        readFromDB();
     }
 
-    private void readFromDB() {
+    public void readFromDB() {
         try (Connection connection = DriverManager.getConnection(URL);
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM Chore;")){
             ResultSet resultSet = statement.executeQuery();

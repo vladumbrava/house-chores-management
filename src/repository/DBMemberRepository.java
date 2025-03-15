@@ -10,10 +10,10 @@ public class DBMemberRepository extends MemoryRepository<UUID, Member> {
 
     public DBMemberRepository(String repoPath) {
         this.URL = "jdbc:sqlite:" + repoPath;
-
+        readFromDB();
     }
 
-    private void readFromDB() {
+    public void readFromDB() {
         try (Connection connection = DriverManager.getConnection(URL);
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM Member;")) {
             ResultSet resultSet = statement.executeQuery();
