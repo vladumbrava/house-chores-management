@@ -31,6 +31,14 @@ public class House implements Identifiable<UUID>, Serializable {
         this.houseMembersList = new ArrayList<>();
     }
 
+    public House(String houseName) {
+        this.houseID = UUID.randomUUID();
+        this.houseName = houseName;
+        this.houseTotalPoints = 0;
+        this.houseChoresList = new ArrayList<>();
+        this.houseMembersList = new ArrayList<>();
+    }
+
     public House() {
     }
 
