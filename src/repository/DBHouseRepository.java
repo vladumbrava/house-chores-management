@@ -152,13 +152,68 @@ public class DBHouseRepository extends MemoryRepository<UUID, House> {
     public void add(UUID id, House object) {
         super.add(id, object);
 
+        try (Connection connection = DriverManager.getConnection(URL);
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO House VALUES (?,?,?)")) {
+            statement.setString(1, object.getID().toString());
+            statement.setString(2, object.getHouseName());
+            statement.setInt(3,object.getHouseTotalPoints());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
+        try (Connection connection = DriverManager.getConnection(URL);
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO HouseChores VALUES (?,?)")) {
+            UUID[] choresIDs = object.getHouseChoresList().toArray(new UUID[0]);
+            for (UUID choreID : choresIDs) {
+                statement.setString(1, object.getID().toString());
+                statement.setString(2, choreID.toString());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (Connection connection = DriverManager.getConnection(URL);
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO HouseMembers VALUES (?,?)")) {
+            UUID[] membersIDs = object.getHouseMembersList().toArray(new UUID[0]);
+            for (UUID memberID : membersIDs) {
+                statement.setString(1, object.getID().toString());
+                statement.setString(2, memberID.toString());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void delete(UUID id) {
         super.delete(id);
 
+        try (Connection connection = DriverManager.getConnection(URL);
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM House WHERE houseID = ?")) {
+            statement.setString(1, id.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (Connection connection = DriverManager.getConnection(URL);
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM HouseMembers WHERE houseID = ?")) {
+            statement.setString(1, id.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (Connection connection = DriverManager.getConnection(URL);
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM HouseChores WHERE houseID = ?")) {
+            statement.setString(1, id.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
