@@ -1,6 +1,7 @@
 package service;
 
 import domain.House;
+import domain.Member;
 import repository.DBChoreRepository;
 import repository.DBHouseRepository;
 import repository.DBMemberRepository;
@@ -46,8 +47,7 @@ public class Service {
 
     public UUID findMemberIDByMemberName(UUID houseID, String memberFirstName, String memberLastName) {
         UUID memberIDFound = null;
-        House house = houseRepo.findByID(houseID);
-        for (UUID memberID : house.getHouseMembersList()){
+        for (UUID memberID : houseRepo.findByID(houseID).getHouseMembersList()){
             if (memberRepo.findByID(memberID).getMemberFirstName().equals(memberFirstName) &&
             memberRepo.findByID(memberID).getMemberLastName().equals(memberLastName)){
                 memberIDFound = memberID;
@@ -58,8 +58,7 @@ public class Service {
 
     public UUID findChoreIDByTitle(UUID houseID, String choreTitle) {
         UUID choreIDFound = null;
-        House house = houseRepo.findByID(houseID);
-        for (UUID choreID : house.getHouseChoresList()){
+        for (UUID choreID : houseRepo.findByID(houseID).getHouseChoresList()){
             if (choreRepo.findByID(choreID).getChoreTitle().equals(choreTitle)){
                 choreIDFound = choreID;
             }
@@ -83,5 +82,39 @@ public class Service {
         houseRepo.delete(houseID);
     }
 
+    public void updateHouseName(UUID houseID, String newHouseName) {
+        houseRepo.findByID(houseID).setHouseName(newHouseName);
+    }
 
+    public void updateHouseTotalPoints(UUID houseID, int newTotalPoints) {
+        houseRepo.findByID(houseID).setHouseTotalPoints(newTotalPoints);
+
+    }
+
+    public void addMemberToHouse(UUID houseID, String memberFirstName, String memberLastName, int memberAge) {
+        Member member = new Member(memberFirstName, memberLastName, memberAge);
+        memberRepo.add(member.getID(), member);
+        houseRepo.findByID(houseID).getHouseMembersList().add(member.getID());
+    }
+
+    public void removeMemberFromHouse(UUID houseID, UUID memberID) {
+        houseRepo.findByID(houseID).getHouseMembersList().remove(memberID);
+        memberRepo.delete(memberID);
+    }
+
+    public void updateMemberFirstName(UUID houseID, UUID memberID, String newMemberFirstName) {
+        memberRepo.findByID(memberID).setMemberFirstName(newMemberFirstName);
+    }
+
+    public void updateMemberLastName() {
+
+    }
+
+    public void updateMemberAge() {
+
+    }
+
+    public void updateMemberPoints() {
+
+    }
 }
