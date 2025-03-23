@@ -44,6 +44,29 @@ public class Service {
         return houseID;
     }
 
+    public UUID findMemberIDByMemberName(UUID houseID, String memberFirstName, String memberLastName) {
+        UUID memberIDFound = null;
+        House house = houseRepo.findByID(houseID);
+        for (UUID memberID : house.getHouseMembersList()){
+            if (memberRepo.findByID(memberID).getMemberFirstName().equals(memberFirstName) &&
+            memberRepo.findByID(memberID).getMemberLastName().equals(memberLastName)){
+                memberIDFound = memberID;
+            }
+        }
+        return memberIDFound;
+    }
+
+    public UUID findChoreIDByTitle(UUID houseID, String choreTitle) {
+        UUID choreIDFound = null;
+        House house = houseRepo.findByID(houseID);
+        for (UUID choreID : house.getHouseChoresList()){
+            if (choreRepo.findByID(choreID).getChoreTitle().equals(choreTitle)){
+                choreIDFound = choreID;
+            }
+        }
+        return choreIDFound;
+    }
+
     public void createHouse(String houseName) {
         House house = new House(houseName);
         houseRepo.add(house.getID(), house);
@@ -59,4 +82,6 @@ public class Service {
         }
         houseRepo.delete(houseID);
     }
+
+
 }
