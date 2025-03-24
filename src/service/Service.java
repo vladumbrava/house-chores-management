@@ -1,11 +1,14 @@
 package service;
 
+import domain.Chore;
 import domain.House;
 import domain.Member;
+import domain.Status;
 import repository.DBChoreRepository;
 import repository.DBHouseRepository;
 import repository.DBMemberRepository;
 
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -134,5 +137,23 @@ public class Service {
         memberRepo.delete(memberID);
         updatedMember.setMemberPoints(newMemberPoints);
         memberRepo.add(memberID, updatedMember);
+    }
+
+    public void addChoreToHouse(UUID houseID, UUID choreAssignedMemberID, String choreTitle, String choreDescription,
+                                LocalDateTime choreDeadline, int choreAssignedPoints, Status choreStatus) {
+        Chore chore = new Chore(choreAssignedMemberID, choreTitle, choreDescription, choreDeadline, choreAssignedPoints, choreStatus);
+        choreRepo.add(chore.getID(), chore);
+        House updatedHouse = houseRepo.findByID(houseID);
+        updatedHouse.getHouseChoresList().add(chore.getID());
+        houseRepo.delete(houseID);
+        houseRepo.add(houseID, updatedHouse);
+    }
+
+    public void removeChoreFromHouse(UUID houseID, UUID choreID) {
+        choreRepo.delete(choreID);
+        House updatedHouse = houseRepo.findByID(houseID);
+        houseRepo.delete(houseID);
+        updatedHouse.getHouseChoresList().remove(choreID);
+        houseRepo.add(houseID, updatedHouse);
     }
 }
