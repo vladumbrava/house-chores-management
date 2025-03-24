@@ -115,15 +115,24 @@ public class Service {
         memberRepo.add(memberID, updatedMember);
     }
 
-    public void updateMemberLastName() {
-
+    public void updateMemberLastName(UUID memberID, String newMemberLastName) {
+        Member updatedMember = memberRepo.findByID(memberID);
+        memberRepo.delete(memberID);
+        updatedMember.setMemberLastName(newMemberLastName);
+        memberRepo.add(memberID, updatedMember);
     }
 
-    public void updateMemberAge() {
-
+    public void updateMemberAge(UUID memberID, int newMemberAge) {
+        Member updatedMember = memberRepo.findByID(memberID);
+        memberRepo.delete(memberID);
+        updatedMember.setMemberAge(newMemberAge);
+        memberRepo.add(memberID, updatedMember);
     }
 
-    public void updateMemberPoints() {
-
+    public void updateMemberPoints(UUID memberID, int newMemberPoints) {
+        Member updatedMember = memberRepo.findByID(memberID);
+        memberRepo.delete(memberID);
+        updatedMember.setMemberPoints(newMemberPoints);
+        memberRepo.add(memberID, updatedMember);
     }
 }
