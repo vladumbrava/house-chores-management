@@ -94,16 +94,25 @@ public class Service {
     public void addMemberToHouse(UUID houseID, String memberFirstName, String memberLastName, int memberAge) {
         Member member = new Member(memberFirstName, memberLastName, memberAge);
         memberRepo.add(member.getID(), member);
-        houseRepo.findByID(houseID).getHouseMembersList().add(member.getID());
+        House updatedHouse = houseRepo.findByID(houseID);
+        updatedHouse.getHouseMembersList().add(member.getID());
+        houseRepo.delete(houseID);
+        houseRepo.add(houseID, updatedHouse);
     }
 
     public void removeMemberFromHouse(UUID houseID, UUID memberID) {
-        houseRepo.findByID(houseID).getHouseMembersList().remove(memberID);
         memberRepo.delete(memberID);
+        House updatedHouse = houseRepo.findByID(houseID);
+        houseRepo.delete(houseID);
+        updatedHouse.getHouseMembersList().remove(memberID);
+        houseRepo.add(houseID, updatedHouse);
     }
 
-    public void updateMemberFirstName(UUID houseID, UUID memberID, String newMemberFirstName) {
-        memberRepo.findByID(memberID).setMemberFirstName(newMemberFirstName);
+    public void updateMemberFirstName(UUID memberID, String newMemberFirstName) {
+        Member updatedMember = memberRepo.findByID(memberID);
+        memberRepo.delete(memberID);
+        updatedMember.setMemberFirstName(newMemberFirstName);
+        memberRepo.add(memberID, updatedMember);
     }
 
     public void updateMemberLastName() {
